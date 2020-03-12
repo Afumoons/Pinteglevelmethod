@@ -28,7 +28,25 @@ class dao_kat
     // insert database
     public function simpan($nama, $desc)
     {
-        $sql = "insert into categories(cat_name,cat_description) values('" . $nama . "','" . $desc . "')";
+        $sql = "INSERT into categories(cat_name,cat_description) values('" . $nama . "','" . $desc . "')";
+        $hasil = $this->db->proses($sql);
+        return $hasil;
+    }
+
+    // delete 
+    public function delete($id)
+    {
+        $sql = "DELETE from categories where cat_id= '" . $id . "'";
+        $hasil = $this->db->proses($sql);
+        return $hasil;
+    }
+
+    // update
+    public function update($id, $nama, $desc)
+    {
+        $sql = "UPDATE categories
+        SET cat_name = '" . $nama . "', cat_description = '" . $desc . "'
+        WHERE cat_id = '" . $id . "';";
         $hasil = $this->db->proses($sql);
         return $hasil;
     }

@@ -16,10 +16,22 @@ class page_controller
         if (isset($_SERVER['HTTP_ACCEPT'])) {
             $type = $_SERVER['HTTP_ACCEPT'];
             if (strpos($type, 'text/html') !== false) {
-                if ((!isset($_GET['nama'])) && (!isset($_GET['deskripsi'])) && (!isset($_GET['simpan']))) {
+                if ((!isset($_GET['id'])) && (!isset($_GET['nama'])) && (!isset($_GET['deskripsi'])) && (!isset($_GET['simpan']))) {
+                    // kososng semua
                     include 'view/input.php';
-                } else {
+                } elseif ((!isset($_GET['nama'])) && (!isset($_GET['deskripsi']))) {
+                    //delete (nama, deskripsi gaada)
+                    $hasil = $this->dao_kat->delete($_GET['id']);
+                    $result = $this->dao_kat->select();
+                    include 'view/cetak.php';
+                } elseif ((!isset($_GET['id']))) {
+                    //insert (id gaada)
                     $hasil = $this->dao_kat->simpan($_GET['nama'], $_GET['deskripsi']);
+                    $result = $this->dao_kat->select();
+                    include 'view/cetak.php';
+                } else {
+                    //update
+                    $hasil = $this->dao_kat->update($_GET['id'], $_GET['nama'], $_GET['deskripsi']);
                     $result = $this->dao_kat->select();
                     include 'view/cetak.php';
                 }
@@ -35,12 +47,26 @@ class page_controller
                 }
             }
             if (strpos($type1, 'application/x-www-form-urlencoded') !== false) {
-
-                if ((isset($_POST['nama'])) && (isset($_POST['deskripsi']))) {
+                if ((isset($_POST['id'])) && (isset($_POST['nama'])) && (isset($_POST['deskripsi']))) {
+                    //update
+                    $hasil = $this->dao_kat->update($_POST['id'], $_POST['nama'], $_POST['deskripsi']);
+                    if ($hasil == 1) {
+                        header('Content-Type: application/json');
+                        echo json_encode('status update:berhasil');
+                    }
+                } elseif ((isset($_POST['nama'])) && (isset($_POST['deskripsi']))) {
+                    //insert
                     $hasil = $this->dao_kat->simpan($_POST['nama'], $_POST['deskripsi']);
                     if ($hasil == 1) {
                         header('Content-Type: application/json');
                         echo json_encode('status simpan:berhasil');
+                    }
+                } elseif ((isset($_POST['id']))) {
+                    //delete
+                    $hasil = $this->dao_kat->delete($_POST['id']);
+                    if ($hasil == 1) {
+                        header('Content-Type: application/json');
+                        echo json_encode('status delete:berhasil');
                     }
                 }
             }
