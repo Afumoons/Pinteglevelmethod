@@ -10,4 +10,4 @@ define('DB_USER', 'root');
 define('DB_PASS', 'Afumoons');
 
 # the name of your database
-define('DB_NAME', 'pentaho');
+define('DB_NAME', 'pinteg');
